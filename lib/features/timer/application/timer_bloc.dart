@@ -37,15 +37,19 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     _tickerSubscription?.cancel();
     _tickerSubscription = _timerRepository
         .ticker()
-        .listen((ticks) => add(TimerTicked(duration: event.duration - ticks)));
+        .listen((ticks) {
+          final remaining = event.duration - ticks;
+          add(TimerTicked(duration: remaining));
+        });
   }
 
   void _onTicked(TimerTicked event, Emitter<TimerState> emit) {
-    emit(
-      event.duration > 0
-          ? TimerTicking(event.duration, state.initialDuration, state.lapTimes)
-          : TimerFinished(state.initialDuration, state.lapTimes),
-    );
+    if (event.duration > 0) {
+      emit(TimerTicking(event.duration, state.initialDuration, state.lapTimes));
+    } else {
+      _tickerSubscription?.cancel();
+      emit(TimerFinished(state.initialDuration, state.lapTimes));
+    }
   }
 
   void _onPaused(TimerPaused event, Emitter<TimerState> emit) {

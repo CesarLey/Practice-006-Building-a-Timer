@@ -49,8 +49,10 @@ class _TimerView extends StatelessWidget {
   double _calculateMinHeight(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final topPadding = MediaQuery.of(context).padding.top;
-    final minHeight = screenHeight - topPadding - kToolbarHeight;
-    return minHeight > 0 ? minHeight : 0;
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+    final minHeight = screenHeight - topPadding - bottomPadding - kToolbarHeight;
+    // Asegurar que el valor mínimo sea al menos 300 para evitar constraints negativos
+    return minHeight > 300 ? minHeight : 300;
   }
 
   @override
