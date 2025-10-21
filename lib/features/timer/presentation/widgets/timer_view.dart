@@ -1,4 +1,4 @@
-import 'package:audioplayers/audioplayers.dart';
+import 'package:kiritochi/core/services/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiritochi/features/timer/application/timer_bloc.dart';
@@ -42,8 +42,15 @@ class _TimerView extends StatelessWidget {
   final double verticalPadding;
 
   Future<void> _playCompletionSound() async {
-    final player = AudioPlayer();
-    await player.play(AssetSource('audio/timer_complete.mp3'));
+    final audio = AudioService();
+    await audio.playCompletion();
+  }
+
+  double _calculateMinHeight(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final topPadding = MediaQuery.of(context).padding.top;
+    final minHeight = screenHeight - topPadding - kToolbarHeight;
+    return minHeight > 0 ? minHeight : 0;
   }
 
   @override
@@ -57,9 +64,7 @@ class _TimerView extends StatelessWidget {
       child: SingleChildScrollView(
         child: ConstrainedBox(
           constraints: BoxConstraints(
-            minHeight: MediaQuery.of(context).size.height - 
-                       MediaQuery.of(context).padding.top - 
-                       kToolbarHeight,
+            minHeight: _calculateMinHeight(context),
           ),
           child: IntrinsicHeight(
             child: Column(

@@ -13,7 +13,6 @@ class ActionsButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TimerBloc, TimerState>(
-      buildWhen: (prev, state) => prev.runtimeType != state.runtimeType,
       builder: (context, state) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
