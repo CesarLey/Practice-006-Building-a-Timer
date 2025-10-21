@@ -23,6 +23,9 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
   final TimerRepository _timerRepository;
   static const int _duration = 60;
   int _customDuration = _duration;
+  
+  /// Getter público para obtener la duración personalizada actual
+  int get customDuration => _customDuration;
 
   StreamSubscription<int>? _tickerSubscription;
 

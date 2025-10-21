@@ -13,28 +13,21 @@ class ActionsButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TimerBloc, TimerState>(
-      buildWhen: (previous, current) {
-        // Reconstruir si el tipo de estado cambia O si es TimerInitial con diferente duración
-        if (previous.runtimeType != current.runtimeType) return true;
-        if (current is TimerInitial && previous is TimerInitial) {
-          return previous.duration != current.duration;
-        }
-        return false;
-      },
       builder: (context, state) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ...switch (state) {
               TimerInitial() => [
-                FloatingActionButton(
-                  child: const Icon(Icons.play_arrow),
-                  onPressed: () {
-                    _audioService.playClick();
-                    context.read<TimerBloc>().add(
-                      TimerStarted(duration: state.duration),
-                    );
-                  },
+                Builder(
+                  builder: (ctx) => FloatingActionButton(
+                    child: const Icon(Icons.play_arrow),
+                    onPressed: () {
+                      _audioService.playClick();
+                      final bloc = ctx.read<TimerBloc>();
+                      bloc.add(TimerStarted(duration: bloc.customDuration));
+                    },
+                  ),
                 ),
               ],
               TimerTicking() => [
